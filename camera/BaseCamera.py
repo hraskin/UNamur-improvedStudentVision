@@ -31,7 +31,6 @@ class BaseCamera:
         if not self.cap:
             raise Exception("Aucune caméra ouverte.")
 
-        messagebox.showinfo("Flux vidéo", f"Appuie sur 'q' pour quitter la fenêtre.")
         while True:
             ret, frame = self.cap.read()
             if not ret:
