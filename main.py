@@ -1,5 +1,6 @@
 import tkinter as tk
-from camera.BaseCamera import launch_camera
+
+from camera.cameraChoice import launch_camera
 
 root = tk.Tk()
 root.title("Sélection de Caméra (iPhone / Android)")
