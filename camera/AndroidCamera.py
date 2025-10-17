@@ -3,7 +3,7 @@ from camera.BaseCamera import BaseCamera
 
 
 # ======================
-# CLASSE DE BASE
+# CLASSE DÉRIVÉES
 # ======================
 class AndroidCamera(BaseCamera):
     """Classe spécifique pour les caméras Android."""
