@@ -1,12 +1,11 @@
 import cv2
-from camera.BaseCamera import BaseCamera
+from camera.base_camera import BaseCamera
 from tkinter import messagebox
 
 # ======================
 # CLASSES DÉRIVÉES
 # ======================
-class IPhoneCamera(BaseCamera):
-    """Classe spécifique pour les caméras iPhone."""
+class IndexCamera(BaseCamera):
 
     def __init__(self):
         super().__init__()
@@ -14,14 +13,13 @@ class IPhoneCamera(BaseCamera):
 
     def start(self):
         if not self.available:
-            messagebox.showerror("Erreur", "Aucune caméra iPhone détectée.")
+            messagebox.showerror("Erreur", "Aucune caméra par index détectée.")
             return
         index = self.available[1]  # Exemple : premier index disponible
         self.open_camera(index)
-        self.show_feed("Caméra iPhone")
+        self.show_feed("Caméra Index")
 
     def detect_cameras(self):
-        """Détecte les caméras disponibles et retourne leurs index."""
         available = []
         for i in range(10):
             cap = cv2.VideoCapture(i)
@@ -31,7 +29,6 @@ class IPhoneCamera(BaseCamera):
         return
 
     def open_camera(self, index):
-        """Ouvre une caméra donnée."""
         self.cap = cv2.VideoCapture(index)
         if not self.cap.isOpened():
             raise Exception(f"Impossible d’ouvrir la caméra sur l’index {index}.")
