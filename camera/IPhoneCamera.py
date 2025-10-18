@@ -1,11 +1,11 @@
 import cv2
-from camera.BaseCamera import BaseCamera
+from camera.Camera import Camera
 from tkinter import messagebox
 
 # ======================
 # CLASSES DÉRIVÉES
 # ======================
-class IPhoneCamera(BaseCamera):
+class IPhoneCamera(Camera):
     """Classe spécifique pour les caméras iPhone."""
 
     def __init__(self):
@@ -18,17 +18,17 @@ class IPhoneCamera(BaseCamera):
             return
         index = self.available[1]  # Exemple : premier index disponible
         self.open_camera(index)
-        self.show_feed("Caméra iPhone")
+        self.show_feed("Camera iPhone")
 
     def detect_cameras(self):
         """Détecte les caméras disponibles et retourne leurs index."""
         available = []
-        for i in range(10):
+        for i in range(2):
             cap = cv2.VideoCapture(i)
             if cap.isOpened():
                 available.append(i)
                 cap.release()
-        return
+        return available
 
     def open_camera(self, index):
         """Ouvre une caméra donnée."""

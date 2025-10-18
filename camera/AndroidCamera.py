@@ -1,15 +1,15 @@
 import cv2
-from camera.BaseCamera import BaseCamera
+from camera.Camera import Camera
 
 
 # ======================
 # CLASSE DÉRIVÉES
 # ======================
-class AndroidCamera(BaseCamera):
+class AndroidCamera(Camera):
     """Classe spécifique pour les caméras Android."""
     def start(self):
         self.open_camera()
-        self.show_feed("Caméra Android")
+        self.show_feed("Camera Android")
 
     def open_camera(self):
         """Ouvre une caméra donnée."""
