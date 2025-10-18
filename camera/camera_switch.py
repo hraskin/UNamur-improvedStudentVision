@@ -1,7 +1,7 @@
 from tkinter import messagebox
 
-from camera.AndroidCamera import AndroidCamera
-from camera.IPhoneCamera import IPhoneCamera
+from camera.android_camera import AndroidCamera
+from camera.iPhone_camera import IPhoneCamera
 
 def launch_camera(camera_type):
     try:

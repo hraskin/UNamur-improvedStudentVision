@@ -1,5 +1,5 @@
 import cv2
-from camera.Camera import Camera
+from camera.camera import Camera
 from tkinter import messagebox
 
 # ======================
@@ -18,7 +18,7 @@ class IPhoneCamera(Camera):
             return
         index = self.available[1]  # Exemple : premier index disponible
         self.open_camera(index)
-        self.show_feed("Camera iPhone")
+        self.run("Camera iPhone")
 
     def detect_cameras(self):
         """Détecte les caméras disponibles et retourne leurs index."""
