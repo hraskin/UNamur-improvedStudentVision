@@ -1,6 +1,6 @@
 import tkinter as tk
 
-from camera.camera_choice import launch_camera
+from camera.camera_switch import launch_camera
 
 root = tk.Tk()
 root.title("Sélection de Caméra (Index / Flux Réseau)")
