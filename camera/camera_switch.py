@@ -9,6 +9,6 @@ def launch_camera(camera_type):
             cam = IndexCamera()
         else:
             cam = FlowCamera("") # Ajouter l'adresse IP appropriée ici
-        cam.start()
+        cam.run()
     except Exception as e:
         messagebox.showerror("Erreur", str(e))

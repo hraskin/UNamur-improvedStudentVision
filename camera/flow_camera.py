@@ -1,18 +1,18 @@
 import cv2
-from camera.base_camera import BaseCamera
+from camera.camera import Camera
 
 
 # ======================
 # CLASSE DÉRIVÉES
 # ======================
-class FlowCamera(BaseCamera):
+class FlowCamera(Camera):
     def __init__(self, ip_address):
         super().__init__()
         self.ip_address = ip_address
 
     def start(self):
         self.open_camera()
-        self.show_feed("Caméra Flux Réseau")
+        self.run("Caméra Flux Réseau")
 
     def open_camera(self):
         """Ouvre une caméra donnée."""
