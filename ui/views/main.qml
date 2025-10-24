@@ -33,4 +33,8 @@ Window {
 
         }
     }
+
+    onClosing: {
+        backend.stop_application()
+    }
 }
