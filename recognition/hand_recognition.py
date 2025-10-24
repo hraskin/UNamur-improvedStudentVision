@@ -10,6 +10,7 @@ class HandRecognizer:
     def __init__(self, max_hands=1):
         self.landmarks_to_draw = []
         self.handedness_to_draw = []
+        self.index_position = None
 
         # Configuration du modèle
         base_options = python.BaseOptions(model_asset_path=MODEL_PATH)
@@ -26,6 +27,7 @@ class HandRecognizer:
         if result and result.hand_landmarks:
             self.landmarks_to_draw = [result.hand_landmarks[0]]
             self.handedness_to_draw = [result.handedness[0]]
+            self.index_position = result.hand_landmarks[0][8] # Index of the index finger tip
         else:
             self.landmarks_to_draw = []
             self.handedness_to_draw = []

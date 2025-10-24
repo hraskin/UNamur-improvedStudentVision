@@ -1,5 +1,6 @@
 import cv2
 
+from vision.interest_zone import center_interest_zone
 from recognition.hand_recognition import HandRecognizer
 
 class Camera:
@@ -21,6 +22,9 @@ class Camera:
             # Dessiner les résultats
             if self.recognizer.landmarks_to_draw:
                 self.recognizer.draw_landmarks(frame)
+                index_position = self.recognizer.index_position
+                center_interest_zone(frame, index_position)
+
             else:
                 cv2.putText(frame, "Aucune main detectee", (30, 30),
                             cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
