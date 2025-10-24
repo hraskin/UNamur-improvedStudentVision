@@ -26,7 +26,7 @@ class IndexCamera(BaseCamera):
             if cap.isOpened():
                 available.append(i)
                 cap.release()
-        return
+        return available
 
     def open_camera(self, index):
         self.cap = cv2.VideoCapture(index)
