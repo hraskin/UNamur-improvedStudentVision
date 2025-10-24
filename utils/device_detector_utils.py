@@ -1,8 +1,7 @@
-import subprocess
-import re
 import os
 import platform
-
+import subprocess
+import re
 PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 FFMPEG_DIR = os.path.join(PROJECT_ROOT, "ffmpeg")
 
@@ -18,8 +17,8 @@ def detect_cameras():
 
     elif system == "windows":
         cmd = [ffmpeg_path, "-list_devices", "true", "-f", "dshow", "-i", "dummy"]
-        pattern = r"DirectShow video devices(.*?)(DirectShow audio devices|$)"
-        parse_regex = r'"(.*?)"\s+\((.*?)\)'
+        pattern = r"DirectShow video devices.*?\n(.*?)DirectShow audio devices"
+        parse_regex = r'^\[dshow.*?\]\s+"(.*?)"$'
 
     elif system == "linux":
         cmd = [ffmpeg_path, "-f", "v4l2", "-list_devices", "true", "-i", ""]
@@ -32,18 +31,17 @@ def detect_cameras():
     result = subprocess.run(cmd, stderr=subprocess.PIPE, text=True)
     output = result.stderr
 
-    match = re.search(pattern, output, re.S)
+    match = re.search(pattern, output, re.S | re.MULTILINE)
     if not match:
         return []
 
     section = match.group(1)
 
-    cameras = []
     if system == "darwin":
         cameras = [(int(i), name.strip()) for i, name in re.findall(parse_regex, section)]
     elif system == "windows":
-        lines = re.findall(parse_regex, section)
-        cameras = [(idx, name.strip()) for idx, (name, _) in enumerate(lines)]
+        lines = re.findall(parse_regex, section, re.MULTILINE)
+        cameras = [(idx, name.strip()) for idx, name in enumerate(lines)]
     elif system == "linux":
         lines = re.findall(parse_regex, section)
         cameras = [(idx, name.strip()) for idx, name in enumerate(lines)]
@@ -56,9 +54,9 @@ def detect_cameras():
 
     return cameras
 
+
 def _get_ffmpeg_path():
     system = platform.system().lower()
-
     if system == "windows":
         return os.path.join(FFMPEG_DIR, "win32", "ffmpeg.exe")
     elif system == "darwin":
