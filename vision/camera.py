@@ -1,6 +1,6 @@
 import cv2
 
-from vision.interest_zone import center_interest_zone
+from vision.interest_zone import zoom_on_interest_zone
 from recognition.hand_recognition import HandRecognizer
 
 class Camera:
@@ -23,7 +23,7 @@ class Camera:
             if self.recognizer.landmarks_to_draw:
                 self.recognizer.draw_landmarks(frame)
                 index_position = self.recognizer.index_position
-                center_interest_zone(frame, index_position)
+                frame = zoom_on_interest_zone(frame, index_position)
 
             else:
                 cv2.putText(frame, "Aucune main detectee", (30, 30),
