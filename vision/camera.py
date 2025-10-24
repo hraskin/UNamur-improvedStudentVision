@@ -1,6 +1,6 @@
 import cv2
 
-from vision.interest_zone import zoom_on_interest_zone
+from vision.interest_zone import ZoomStabilizer, zoom_on_interest_zone_stable
 from recognition.hand_recognition import HandRecognizer
 
 class Camera:
@@ -9,6 +9,7 @@ class Camera:
         if not self.cap.isOpened():
             raise Exception("Impossible d’ouvrir la caméra.")
         self.recognizer = HandRecognizer()
+        self.stabilizer = ZoomStabilizer(alpha=0.15)  # petit alpha = mouvement plus doux
 
     def run(self, window_name="Camera"):
         while True:
@@ -23,7 +24,7 @@ class Camera:
             if self.recognizer.landmarks_to_draw:
                 self.recognizer.draw_landmarks(frame)
                 index_position = self.recognizer.index_position
-                frame = zoom_on_interest_zone(frame, index_position)
+                frame = zoom_on_interest_zone_stable(frame, index_position, self.stabilizer, zoom_ratio=1.4, zone_ratio=0.55)
 
             else:
                 cv2.putText(frame, "Aucune main detectee", (30, 30),
