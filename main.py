@@ -1,6 +1,12 @@
 import tkinter as tk
+from PySide6.QtWidgets import QApplication
 
 from camera.camera_switch import launch_camera
+from ui.ui import Ui
+
+qapp = QApplication()
+ui = Ui()
+ui.setup_ui()
 
 root = tk.Tk()
 root.title("Sélection de Caméra (Index / Flux Réseau)")
@@ -18,3 +24,5 @@ btn_quit = tk.Button(root, text="Quitter", command=root.destroy, width=25)
 btn_quit.pack(pady=10)
 
 root.mainloop()
+
+
