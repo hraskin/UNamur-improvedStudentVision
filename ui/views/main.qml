@@ -1,12 +1,15 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
+import QtQuick.Controls.Basic
 
 ApplicationWindow {
     id: root
     visible: true
-    width: 800
-    height: 600
+    width: 900
+    height: 700
+    minimumWidth: 800
+    minimumHeight: height
     title: "ImprovedStudentVision"
     color: "#F4F4F4"
 
@@ -22,9 +25,9 @@ ApplicationWindow {
         color: "#F4F4F4"
 
         ColumnLayout {
-            anchors.centerIn: parent
-            spacing: 32
-            width: parent.width * 0.7
+            anchors.fill: parent
+            anchors.margins: 30
+            spacing: 25
 
             Text {
                 text: "🎯 Configuration d'ImprovedStudentVision"
@@ -35,6 +38,8 @@ ApplicationWindow {
                 horizontalAlignment: Text.AlignHCenter
                 wrapMode: Text.WordWrap
                 Layout.alignment: Qt.AlignHCenter
+                Layout.fillWidth: true
+                Layout.topMargin: 10
             }
 
             Text {
@@ -45,20 +50,23 @@ ApplicationWindow {
                 horizontalAlignment: Text.AlignHCenter
                 wrapMode: Text.WordWrap
                 Layout.alignment: Qt.AlignHCenter
+                Layout.fillWidth: true
+                Layout.maximumWidth: 600
             }
 
             Rectangle {
-                width: parent.width
+                Layout.preferredHeight: 180
+                Layout.fillWidth: true
+                Layout.maximumWidth: 600
+                Layout.alignment: Qt.AlignHCenter
                 radius: 12
                 color: "#E0E0E0"
                 border.color: "#B0B0B0"
                 border.width: 1
-                Layout.alignment: Qt.AlignHCenter
-                Layout.fillWidth: true
-                height: 180
 
                 ColumnLayout {
-                    anchors.centerIn: parent
+                    anchors.fill: parent
+                    anchors.margins: 20
                     spacing: 16
 
                     Text {
@@ -75,6 +83,7 @@ ApplicationWindow {
                         Layout.alignment: Qt.AlignHCenter
 
                         Button {
+                            id: indexCameraBtn
                             text: "Caméra par index"
                             font.family: root.fontName
                             font.pixelSize: 18
@@ -82,14 +91,22 @@ ApplicationWindow {
                                 implicitWidth: 240
                                 implicitHeight: 60
                                 radius: 12
-                                color: control.down ? "#B39DDB" : "#D1C4E9"
+                                color: indexCameraBtn.down ? "#B39DDB" : "#D1C4E9"
                                 border.color: "#7E57C2"
                                 border.width: 2
                             }
                             onClicked: backend.want_index_camera()
+
+                            MouseArea {
+                                anchors.fill: parent
+                                cursorShape: Qt.PointingHandCursor
+                                enabled: true
+                                onPressed: mouse.accepted = false
+                            }
                         }
 
                         Button {
+                            id: flowCameraBtn
                             text: "Caméra par flux"
                             font.family: root.fontName
                             font.pixelSize: 18
@@ -97,32 +114,40 @@ ApplicationWindow {
                                 implicitWidth: 240
                                 implicitHeight: 60
                                 radius: 12
-                                color: control.down ? "#80CBC4" : "#B2DFDB"
+                                color: flowCameraBtn.down ? "#80CBC4" : "#B2DFDB"
                                 border.color: "#009688"
                                 border.width: 2
                             }
                             onClicked: backend.want_flow_camera()
+
+                            MouseArea {
+                                anchors.fill: parent
+                                cursorShape: Qt.PointingHandCursor
+                                enabled: true
+                                onPressed: mouse.accepted = false
+                            }
                         }
                     }
                 }
             }
 
             Rectangle {
-                width: parent.width
+                Layout.preferredHeight: 150
+                Layout.fillWidth: true
+                Layout.maximumWidth: 600
+                Layout.alignment: Qt.AlignHCenter
                 radius: 12
                 color: "#E0E0E0"
                 border.color: "#B0B0B0"
                 border.width: 1
-                Layout.alignment: Qt.AlignHCenter
-                Layout.fillWidth: true
-                height: 150
 
                 ColumnLayout {
-                    anchors.centerIn: parent
+                    anchors.fill: parent
+                    anchors.margins: 20
                     spacing: 16
 
                     Text {
-                        text: " Sélection du modèle d'analyse"
+                        text: "🧠 Sélection du modèle d'analyse"
                         font.family: root.fontName
                         font.pixelSize: 24
                         font.bold: true
@@ -133,7 +158,7 @@ ApplicationWindow {
                     ComboBox {
                         id: modelSelector
                         Layout.alignment: Qt.AlignHCenter
-                        width: 300
+                        Layout.preferredWidth: 300
                         font.family: root.fontName
                         font.pixelSize: 18
                         model: [
@@ -145,24 +170,39 @@ ApplicationWindow {
                             console.log("Modèle sélectionné :", modelSelector.currentText)
                             backend.set_analysis_model(modelSelector.currentIndex)
                         }
+
+                        MouseArea {
+                            anchors.fill: parent
+                            cursorShape: Qt.PointingHandCursor
+                            enabled: true
+                            onPressed: mouse.accepted = false
+                        }
                     }
                 }
             }
 
             Button {
+                id: startButton
                 text: "Lancer l'analyse"
                 font.family: root.fontName
                 font.pixelSize: 20
                 Layout.alignment: Qt.AlignHCenter
+                Layout.preferredWidth: 300
+                Layout.preferredHeight: 60
                 background: Rectangle {
-                    implicitWidth: 300
-                    implicitHeight: 60
                     radius: 12
-                    color: control.down ? "#81C784" : "#A5D6A7"
+                    color: startButton.down ? "#81C784" : "#A5D6A7"
                     border.color: "#388E3C"
                     border.width: 2
                 }
                 onClicked: backend.start_analysis()
+
+                MouseArea {
+                    anchors.fill: parent
+                    cursorShape: Qt.PointingHandCursor
+                    enabled: true
+                    onPressed: mouse.accepted = false
+                }
             }
 
             Text {
@@ -172,6 +212,9 @@ ApplicationWindow {
                 color: "#777"
                 horizontalAlignment: Text.AlignHCenter
                 Layout.alignment: Qt.AlignHCenter
+                Layout.fillWidth: true
+                Layout.bottomMargin: 10
+                Layout.topMargin: 20
             }
         }
     }
