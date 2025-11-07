@@ -1,7 +1,7 @@
 import cv2
 from tkinter import messagebox
 
-from camera.camera import Camera
+from vision.camera import Camera
 
 
 # ======================
@@ -17,7 +17,7 @@ class IndexCamera(Camera):
         if not self.available:
             messagebox.showerror("Erreur", "Aucune caméra par index détectée.")
             return
-        index = self.available[0]  # Exemple : premier index disponible
+        index = self.available[1]  # Exemple : premier index disponible
         self.open_camera(index)
         self.run("Caméra Index")
 

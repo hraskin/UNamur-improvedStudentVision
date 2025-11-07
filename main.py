@@ -6,4 +6,3 @@ if __name__ == "__main__":
     q_app = QApplication()
     view = MainView()
     MainPresenter(view)
-

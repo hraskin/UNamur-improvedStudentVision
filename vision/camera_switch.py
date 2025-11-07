@@ -1,7 +1,7 @@
 from tkinter import messagebox
 
-from camera.flow_camera import FlowCamera
-from camera.index_camera import IndexCamera
+from vision.flow_camera import FlowCamera
+from vision.index_camera import IndexCamera
 
 def launch_camera(camera_type):
     try:

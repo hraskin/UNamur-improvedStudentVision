@@ -1,5 +1,5 @@
 import cv2
-from camera.camera import Camera
+from vision.camera import Camera
 
 
 # ======================
