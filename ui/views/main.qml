@@ -6,10 +6,9 @@ import QtQuick.Controls.Basic
 ApplicationWindow {
     id: root
     visible: true
-    width: 900
-    height: 700
+    visibility: ApplicationWindow.Maximized
     minimumWidth: 800
-    minimumHeight: height
+    minimumHeight: 700
     title: "ImprovedStudentVision"
     color: "#F4F4F4"
 
