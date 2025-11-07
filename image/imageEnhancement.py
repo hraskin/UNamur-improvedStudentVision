@@ -1,31 +1,35 @@
 import cv2
 import numpy as np
 
-def enhance_board_light(frame, contrast=1.4, brightness=20, thickness=3):
+def enhance_board_light(frame, contrast=1.3, brightness=15, contour_color=(0,0,0)):
     """
-    Améliore le tableau pour malvoyants :
-    - Contraste et netteté
-    - Bords noirs épais autour des écritures et formes
+    Améliore la lisibilité pour malvoyants :
+    - Contraste et luminosité modérés
+    - Détection rapide de contours avec Sobel
+    - Superposition des contours noirs sur l'image originale
     """
-    # Ajustement contraste + luminosité
-    # 1️⃣ Contraste + luminosité
+    # 1️⃣ Contraste et luminosité
     enhanced = cv2.convertScaleAbs(frame, alpha=contrast, beta=brightness)
 
-    # 2️⃣ Accentuation légère (sharpen)
-    blurred = cv2.GaussianBlur(enhanced, (0, 0), 1)
-    sharp = cv2.addWeighted(enhanced, 1.8, blurred, -0.8, 0)
+    # 2️⃣ Niveaux de gris pour le filtre Sobel
+    gray = cv2.cvtColor(enhanced, cv2.COLOR_BGR2GRAY)
 
-    # 3️⃣ Conversion en gris pour contour
-    gray = cv2.cvtColor(sharp, cv2.COLOR_BGR2GRAY)
+    # 3️⃣ Sobel horizontal et vertical
+    grad_x = cv2.Sobel(gray, cv2.CV_16S, 1, 0, ksize=3)
+    grad_y = cv2.Sobel(gray, cv2.CV_16S, 0, 1, ksize=3)
 
-    # 4️⃣ Détection des contours avec Canny
-    edges = cv2.Canny(gray, 20, 100)
+    abs_grad_x = cv2.convertScaleAbs(grad_x)
+    abs_grad_y = cv2.convertScaleAbs(grad_y)
+    magnitude = cv2.addWeighted(abs_grad_x, 0.5, abs_grad_y, 0.5, 0)
 
-    # 5️⃣ Trouver tous les contours
-    contours, _ = cv2.findContours(edges, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    # 4️⃣ Seuillage pour isoler les contours
+    _, edges = cv2.threshold(magnitude, 50, 255, cv2.THRESH_BINARY)
 
-    # 6️⃣ Dessiner les contours noirs épais
-    output = sharp.copy()
-    cv2.drawContours(output, contours, -1, (0, 0, 0), thickness)
+    # 5️⃣ Épaissir les contours
+    edges = cv2.dilate(edges, np.ones((3,3), np.uint8), iterations=1)
+
+    # 6️⃣ Superposer les contours sur l'image originale
+    output = enhanced.copy()
+    output[edges>0] = contour_color
 
     return output
