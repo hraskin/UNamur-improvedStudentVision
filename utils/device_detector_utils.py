@@ -30,7 +30,6 @@ def detect_index_cameras():
 
     elif system == "windows":
         cmd = [ffmpeg_path, "-list_devices", "true", "-f", "dshow", "-i", "dummy"]
-        # Pas besoin de pattern de section, on parse directement
         pattern = None
         parse_regex = r'^\[dshow.*?\]\s+"(.*?)"\s+\(video\)$'
 
@@ -42,29 +41,25 @@ def detect_index_cameras():
     else:
         return []
 
-    # Exécution de ffmpeg
     result = subprocess.run(cmd, stderr=subprocess.PIPE, text=True)
     output = result.stderr
 
     if system == "windows":
-        lines = re.findall(parse_regex, output, re.MULTILINE)
-        cameras = [(idx, name.strip()) for idx, name in enumerate(lines)]
+        cameras = re.findall(parse_regex, output, re.MULTILINE)
     else:
         match = re.search(pattern, output, re.S | re.MULTILINE)
         if not match:
             return []
-
         section = match.group(1)
 
         if system == "darwin":
-            cameras = [(int(i), name.strip()) for i, name in re.findall(parse_regex, section)]
+            cameras = [name.strip() for _, name in re.findall(parse_regex, section)]
         elif system == "linux":
-            lines = re.findall(parse_regex, section)
-            cameras = [(idx, name.strip()) for idx, name in enumerate(lines)]
+            cameras = [name.strip() for name in re.findall(parse_regex, section)]
 
     ignore_keywords = ["capture screen", "desk view", "virtual", "obs virtual"]
     cameras = [
-        (i, name) for i, name in cameras
+        name for name in cameras
         if not any(k.lower() in name.lower() for k in ignore_keywords)
     ]
 

@@ -1,10 +1,9 @@
-# camera_presenter.py
 from PySide6.QtCore import QObject, QThread, Signal
 from camera.camera_worker import CameraWorker
 from camera.camera_image_provider import CameraImageProvider
 
 class CameraPresenter(QObject):
-    frameUpdated = Signal()  # 👈 exposé à QML
+    frameUpdated = Signal()
 
     def __init__(self, engine):
         super().__init__()
@@ -12,8 +11,8 @@ class CameraPresenter(QObject):
         self._provider = CameraImageProvider()
         self._engine.addImageProvider("camera", self._provider)
 
-    def launch(self, camera_type):
-        self._worker = CameraWorker(camera_type)
+    def launch(self, camera):
+        self._worker = CameraWorker(camera)
         self._thread = QThread()
         self._worker.moveToThread(self._thread)
 
