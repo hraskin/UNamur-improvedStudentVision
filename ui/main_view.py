@@ -1,12 +1,14 @@
-import os
+# main_view.py
 from PySide6.QtCore import QObject, Signal, Slot
 from PySide6.QtQml import QQmlApplicationEngine
 from PySide6.QtWidgets import QApplication
+import os
 
 
 class MainView(QObject):
-    wantIndexCamera = Signal()
-    wantFlowCamera = Signal()
+    wantCamera = Signal(str)
+    wantReturnToMenu = Signal()
+    frameUpdated = Signal()
 
     def __init__(self):
         super().__init__()
@@ -14,10 +16,13 @@ class MainView(QObject):
         self._engine = QQmlApplicationEngine()
         self._main_window = None
 
+    @property
+    def engine(self):
+        return self._engine
+
     def start(self):
         self._engine.load(os.path.join(os.path.dirname(__file__), "views", "main.qml"))
         self._main_window = self._engine.rootObjects()[-1]
-
         self._engine.rootContext().setContextProperty("backend", self)
         self._app.exec()
 
@@ -26,10 +31,14 @@ class MainView(QObject):
         if hasattr(self, "_main_window"):
             self._main_window.destroy()
 
-    @Slot()
-    def want_index_camera(self):
-        self.wantIndexCamera.emit()
+    @Slot(str)
+    def want_camera(self, camera_type: str):
+        self.wantCamera.emit(camera_type)
 
     @Slot()
-    def want_flow_camera(self):
-        self.wantFlowCamera.emit()
+    def return_to_menu(self):
+        self.wantReturnToMenu.emit()
+
+    def show_view(self, view_name: str):
+        if self._main_window:
+            self._main_window.setProperty("currentView", view_name)

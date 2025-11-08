@@ -1,26 +1,32 @@
-from camera.camera_switch import launch_camera
-
+from presenters.camera_presenter import CameraPresenter
 
 class MainPresenter:
     def __init__(self, view):
         self._view = view
+        self._engine = self._view.engine
+        self._camera_presenter = None
 
-        self._view.wantIndexCamera.connect(self.launch_index_camera)
-        self._view.wantFlowCamera.connect(self.launch_flow_camera)
+        self._view.wantCamera.connect(self.launch_camera)
+        self._view.wantReturnToMenu.connect(self.return_to_menu)
 
         self._view.start()
 
-    def close(self):
-        self._view.close()
+    def launch_camera(self, camera_type: str):
+        if self._camera_presenter:
+            self._camera_presenter.stop()
 
-    def launch_index_camera(self):
-        launch_camera("index")
+        self._camera_presenter = CameraPresenter(self._engine)
+        self._camera_presenter.launch(camera_type)
 
-    def launch_flow_camera(self):
-        launch_camera("flow")
+        self._camera_presenter.frameUpdated.connect(self._view.frameUpdated)
 
-    def detect_index_cameras(self):
-        from camera.index_camera import IndexCamera
+        self._view.show_view("camera")
 
-        index_camera = IndexCamera()
-        return index_camera.detect_cameras()
+    def return_to_menu(self):
+        self._stop_camera()
+        self._view.show_view("menu")
+
+    def _stop_camera(self):
+        if self._camera_presenter:
+            self._camera_presenter.stop()
+            self._camera_presenter = None
