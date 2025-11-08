@@ -13,11 +13,12 @@ class Pipeline:
         frame = enhance_frame_light(frame, contrast=1.15, brightness=8)
         frame = enhance_frame_edge(frame)
 
-        #if self.recognizer.landmarks_to_draw:
-            # self.recognizer.draw_landmarks(frame)
-            # frame = zoom_on_interest_zone_stable(
-            #    frame, index_position, self.stabilizer,
-            #    zoom_ratio=1.4, zone_ratio=0.55
-            #)
+        if self.recognizer.landmarks_to_draw:
+            index_position = self.recognizer.index_position
+            self.recognizer.draw_landmarks(frame)
+            frame = zoom_on_interest_zone_stable(
+                frame, index_position, self.stabilizer,
+                zoom_ratio=1.4, zone_ratio=0.55
+            )
 
         return frame
