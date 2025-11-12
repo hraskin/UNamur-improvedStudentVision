@@ -1,5 +1,5 @@
 from presenters.camera_presenter import CameraPresenter
-from utils.device_detector_utils import detect_index_cameras
+from cv2_enumerate_cameras import enumerate_cameras
 
 
 class MainPresenter:
@@ -27,7 +27,7 @@ class MainPresenter:
 
     def _handle_camera_type(self, camera_type):
         if camera_type == "index":
-            cameras = detect_index_cameras()
+            cameras= [camera_info.name for camera_info in enumerate_cameras()]
             self._view.update_camera_list(cameras)
         elif camera_type == "flow":
             self._view.update_camera_list([])
