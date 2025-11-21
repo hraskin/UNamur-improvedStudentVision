@@ -1,8 +1,11 @@
 # main_view.py
+import os
+
 from PySide6.QtCore import QObject, Signal, Slot
 from PySide6.QtQml import QQmlApplicationEngine
 from PySide6.QtWidgets import QApplication
-import os
+
+from settings.settings_singleton import SettingsSingleton
 
 
 class MainView(QObject):
@@ -21,6 +24,10 @@ class MainView(QObject):
         return self._engine
 
     def start(self):
+        qml_path = os.path.join(os.path.dirname(__file__), "views", "main.qml")
+        print(qml_path)
+        self._engine.load(qml_path)
+        print(self._engine.rootObjects())
         self._engine.load(os.path.join(os.path.dirname(__file__), "views", "main.qml"))
         self._main_window = self._engine.rootObjects()[-1]
         self._engine.rootContext().setContextProperty("backend", self)
@@ -42,3 +49,11 @@ class MainView(QObject):
     def show_view(self, view_name: str):
         if self._main_window:
             self._main_window.setProperty("currentView", view_name)
+
+    @Slot()
+    def zoom_on(zoomOn: bool):
+        SettingsSingleton.getInstance().setZoomOn(zoomOn)
+
+    @Slot()
+    def edge_on(edgeOn: bool):
+        SettingsSingleton.getInstance().setEdgeOn(edgeOn)

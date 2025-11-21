@@ -1,6 +1,8 @@
 from camera.interest_zone import ZoomStabilizer, zoom_on_interest_zone_stable
-from image.imageEnhancement import enhance_frame_light, enhance_frame_edge
+from image.imageEnhancement import enhance_frame_edge, enhance_frame_light
 from recognition.hand_recognition import HandRecognizer
+from settings.settings_singleton import SettingsSingleton
+
 
 class Pipeline:
     def __init__(self):
@@ -9,11 +11,12 @@ class Pipeline:
 
     def execute(self, frame):
         self.recognizer.detect_async(frame)
+        
+        if SettingsSingleton.getInstance().getEdgeOn():
+            frame = enhance_frame_light(frame, contrast=1.15, brightness=8)
+            frame = enhance_frame_edge(frame)
 
-        frame = enhance_frame_light(frame, contrast=1.15, brightness=8)
-        frame = enhance_frame_edge(frame)
-
-        if self.recognizer.landmarks_to_draw:
+        if self.recognizer.landmarks_to_draw and SettingsSingleton.getInstance().getZoomOn():
             index_position = self.recognizer.index_position
             self.recognizer.draw_landmarks(frame)
             frame = zoom_on_interest_zone_stable(

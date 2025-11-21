@@ -1,3 +1,4 @@
 opencv-python
 edge-tts
 pyside6
+mediapipe
