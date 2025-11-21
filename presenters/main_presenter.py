@@ -1,3 +1,4 @@
+from keywords_detection.keywords_listerner import KeywordsListener
 from presenters.camera_presenter import CameraPresenter
 from cv2_enumerate_cameras import enumerate_cameras
 
@@ -7,6 +8,7 @@ class MainPresenter:
         self._view = view
         self._engine = self._view.engine
         self._camera_presenter = None
+        self._keyword_listener = KeywordsListener(on_wakeword_detected=self._handle_wakeword)
 
         self._view.wantCamera.connect(self._handle_camera_type)
         self._view.startAnalysis.connect(self.launch_camera)
@@ -22,8 +24,10 @@ class MainPresenter:
         self._camera_presenter.launch(camera)
 
         self._camera_presenter.frameUpdated.connect(self._view.frameUpdated)
+        self._camera_presenter.captureSuccessful.connect(self._view.capture_successful)
 
         self._view.show_view("camera")
+        self._keyword_listener.start()
 
     def _handle_camera_type(self, camera_type):
         if camera_type == "index":
@@ -37,6 +41,10 @@ class MainPresenter:
         self._view.show_view("menu")
 
     def _stop_camera(self):
+        self._keyword_listener.stop()
         if self._camera_presenter:
             self._camera_presenter.stop()
             self._camera_presenter = None
+
+    def _handle_wakeword(self):
+        self._camera_presenter.want_capture_image()

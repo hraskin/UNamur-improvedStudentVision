@@ -14,6 +14,7 @@ class MainView(QObject):
     wantReturnToMenu = Signal()
     startAnalysis = Signal(object)
     frameUpdated = Signal()
+    captureSuccessfulSignal = Signal()
 
     def __init__(self):
         super().__init__()
@@ -34,6 +35,9 @@ class MainView(QObject):
         self._main_window = self._engine.rootObjects()[-1]
         self._engine.rootContext().setContextProperty("backend", self)
         self._app.exec()
+
+    def capture_successful(self):
+        self.captureSuccessfulSignal.emit()
 
     @Slot()
     def stop_application(self):
