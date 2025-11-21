@@ -8,11 +8,14 @@ from camera.pipeline import Pipeline
 class CameraWorker(QObject):
     frame_ready = Signal(QImage)
 
-    def __init__(self, camera_type="index"):
+    def __init__(self, camera: str|int):
         super().__init__()
         self.running = False
-        self.camera_type = camera_type
-        self.cap = cv2.VideoCapture(0)
+        if isinstance(camera, int):
+            self.cap = cv2.VideoCapture(camera)
+        else:
+            url = f"http://{camera}:4747/video"
+            self.cap = cv2.VideoCapture(url)
         if not self.cap.isOpened():
             raise RuntimeError("Impossible d’ouvrir la caméra.")
 

@@ -1,4 +1,3 @@
-# camera_image_provider.py
 from PySide6.QtQuick import QQuickImageProvider
 from PySide6.QtGui import QImage
 from PySide6.QtCore import QMutex, QMutexLocker

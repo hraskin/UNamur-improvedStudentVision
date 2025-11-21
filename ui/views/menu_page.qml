@@ -4,8 +4,19 @@ import QtQuick.Layouts
 import QtQuick.Controls.Basic
 
 Rectangle {
+    id: menu
     anchors.fill: parent
     color: "#F4F4F4"
+
+    property string selectedType: ""
+    property var cameraList: []
+
+    Connections {
+        target: backend
+        function onCameraListReady(cameras) {
+            menu.cameraList = cameras
+        }
+    }
 
     ColumnLayout {
         anchors.fill: parent
@@ -38,7 +49,7 @@ Rectangle {
         }
 
         Rectangle {
-            Layout.preferredHeight: 180
+            Layout.preferredHeight: 220
             Layout.fillWidth: true
             Layout.maximumWidth: 600
             Layout.alignment: Qt.AlignHCenter
@@ -74,7 +85,7 @@ Rectangle {
                             implicitWidth: 240
                             implicitHeight: 60
                             radius: 12
-                            color: indexCameraBtn.down ? "#B39DDB" : "#D1C4E9"
+                            color: menu.selectedType === "index" ? "#B39DDB" : "#D1C4E9"
                             border.color: "#7E57C2"
                             border.width: 2
                         }
@@ -83,7 +94,10 @@ Rectangle {
                             anchors.fill: parent
                             cursorShape: Qt.PointingHandCursor
                             enabled: true
-                            onClicked: backend.want_camera("index")
+                            onClicked: {
+                                menu.selectedType = "index"
+                                backend.want_camera("index")
+                            }
                         }
                     }
 
@@ -96,19 +110,29 @@ Rectangle {
                             implicitWidth: 240
                             implicitHeight: 60
                             radius: 12
-                            color: flowCameraBtn.down ? "#80CBC4" : "#B2DFDB"
+                            color: menu.selectedType === "flow" ? "#80CBC4" : "#B2DFDB"
                             border.color: "#009688"
                             border.width: 2
                         }
-
 
                         MouseArea {
                             anchors.fill: parent
                             cursorShape: Qt.PointingHandCursor
                             enabled: true
-                            onClicked: backend.want_camera("flow")
+                            onClicked: {
+                                menu.selectedType = "flow"
+                                backend.want_camera("flow")
+                            }
                         }
                     }
+                }
+
+                Loader {
+                    id: cameraLoader
+                    Layout.alignment: Qt.AlignHCenter
+                    Layout.fillWidth: true
+                    sourceComponent: menu.selectedType === "index" ? indexSelector :
+                                     (menu.selectedType === "flow" ? flowInput : undefined)
                 }
             }
         }
@@ -149,14 +173,92 @@ Rectangle {
                         "Reconnaissance de symboles"
                     ]
                     onActivated: {
-                        console.log("Modèle sélectionné :", modelSelector.currentText)
                         backend.set_analysis_model(modelSelector.currentIndex)
                     }
 
-                    MouseArea {
-                        anchors.fill: parent
-                        cursorShape: Qt.PointingHandCursor
-                        enabled: true
+                    background: Rectangle {
+                        implicitHeight: 40
+                        color: "#FFFFFF"
+                        border.color: modelSelector.activeFocus ? "#7E57C2" : "#B0B0B0"
+                        border.width: 2
+                        radius: 8
+                    }
+
+                    contentItem: Text {
+                        text: modelSelector.displayText
+                        font: modelSelector.font
+                        color: "#333333"
+                        verticalAlignment: Text.AlignVCenter
+                        leftPadding: 10
+                        rightPadding: 10
+                    }
+
+                    indicator: Canvas {
+                        x: modelSelector.width - width - 10
+                        y: modelSelector.topPadding + (modelSelector.availableHeight - height) / 2
+                        width: 12
+                        height: 8
+                        contextType: "2d"
+
+                        onPaint: {
+                            context.reset();
+                            context.moveTo(0, 0);
+                            context.lineTo(width, 0);
+                            context.lineTo(width / 2, height);
+                            context.closePath();
+                            context.fillStyle = "#333333";
+                            context.fill();
+                        }
+                    }
+
+                    popup: Popup {
+                        y: modelSelector.height
+                        width: modelSelector.width
+                        implicitHeight: contentItem.implicitHeight
+                        padding: 1
+
+                        background: Rectangle {
+                            color: "#FFFFFF"
+                            border.color: "#B0B0B0"
+                            border.width: 2
+                            radius: 8
+                        }
+
+                        contentItem: ListView {
+                            clip: true
+                            implicitHeight: contentHeight
+                            model: modelSelector.popup.visible ? modelSelector.delegateModel : null
+                            currentIndex: modelSelector.highlightedIndex
+
+                            delegate: ItemDelegate {
+                                width: modelSelector.width
+                                height: 40
+
+                                contentItem: Text {
+                                    text: modelData
+                                    color: "#333333"
+                                    font: modelSelector.font
+                                    verticalAlignment: Text.AlignVCenter
+                                    leftPadding: 10
+                                }
+
+                                background: Rectangle {
+                                    color: highlighted ? "#E8E8E8" : "transparent"
+                                }
+                            }
+
+                            ScrollIndicator.vertical: ScrollIndicator {
+                                active: true
+                                background: Rectangle {
+                                    color: "#F0F0F0"
+                                    radius: 4
+                                }
+                                contentItem: Rectangle {
+                                    color: "#C0C0C0"
+                                    radius: 4
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -170,6 +272,7 @@ Rectangle {
             Layout.alignment: Qt.AlignHCenter
             Layout.preferredWidth: 300
             Layout.preferredHeight: 60
+
             background: Rectangle {
                 radius: 12
                 color: startButton.down ? "#81C784" : "#A5D6A7"
@@ -181,7 +284,26 @@ Rectangle {
                 anchors.fill: parent
                 cursorShape: Qt.PointingHandCursor
                 enabled: true
-                onClicked: backend.start_analysis()
+
+                onClicked: {
+                    if (menu.selectedType === "flow") {
+                        if (!cameraLoader.item.acceptableInput || cameraLoader.item.text.length === 0) {
+                            cameraLoader.item.showError = true
+                            cameraLoader.item.forceActiveFocus()
+                            return
+                        }
+                        backend.start_analysis(cameraLoader.item.text)
+                    }
+                    else if (menu.selectedType === "index") {
+                        if (cameraLoader.item.currentIndex < 0) {
+                            return
+                        }
+                        backend.start_analysis(cameraLoader.item.currentIndex)
+                    }
+                    else {
+                        return
+                    }
+                }
             }
         }
 
@@ -195,6 +317,137 @@ Rectangle {
             Layout.fillWidth: true
             Layout.bottomMargin: 10
             Layout.topMargin: 20
+        }
+    }
+
+    Component {
+        id: indexSelector
+        ComboBox {
+            id: cameraDropdown
+            Layout.preferredWidth: 300
+            model: menu.cameraList
+            font.family: root.fontName
+            font.pixelSize: 18
+
+            background: Rectangle {
+                implicitHeight: 40
+                color: "#FFFFFF"
+                border.color: cameraDropdown.activeFocus ? "#7E57C2" : "#B0B0B0"
+                border.width: 2
+                radius: 8
+            }
+
+            contentItem: Text {
+                text: cameraDropdown.displayText
+                font: cameraDropdown.font
+                color: "#333333"
+                verticalAlignment: Text.AlignVCenter
+                leftPadding: 10
+                rightPadding: 10
+            }
+
+            indicator: Canvas {
+                x: cameraDropdown.width - width - 10
+                y: cameraDropdown.topPadding + (cameraDropdown.availableHeight - height) / 2
+                width: 12
+                height: 8
+                contextType: "2d"
+
+                onPaint: {
+                    context.reset();
+                    context.moveTo(0, 0);
+                    context.lineTo(width, 0);
+                    context.lineTo(width / 2, height);
+                    context.closePath();
+                    context.fillStyle = "#333333";
+                    context.fill();
+                }
+            }
+
+            popup: Popup {
+                y: cameraDropdown.height
+                width: cameraDropdown.width
+                implicitHeight: contentItem.implicitHeight
+                padding: 1
+
+                background: Rectangle {
+                    color: "#FFFFFF"
+                    border.color: "#B0B0B0"
+                    border.width: 2
+                    radius: 8
+                }
+
+                contentItem: ListView {
+                    clip: true
+                    implicitHeight: contentHeight
+                    model: cameraDropdown.popup.visible ? cameraDropdown.delegateModel : null
+                    currentIndex: cameraDropdown.highlightedIndex
+
+                    delegate: ItemDelegate {
+                        width: cameraDropdown.width
+                        height: 40
+
+                        contentItem: Text {
+                            text: modelData
+                            color: "#333333"
+                            font: cameraDropdown.font
+                            verticalAlignment: Text.AlignVCenter
+                            leftPadding: 10
+                        }
+
+                        background: Rectangle {
+                            color: highlighted ? "#E8E8E8" : "transparent"
+                        }
+                    }
+
+                    ScrollIndicator.vertical: ScrollIndicator {
+                        active: true
+                        background: Rectangle {
+                            color: "#F0F0F0"
+                            radius: 4
+                        }
+                        contentItem: Rectangle {
+                            color: "#C0C0C0"
+                            radius: 4
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    Component {
+        id: flowInput
+        TextField {
+            id: ipField
+            Layout.preferredWidth: 300
+            font.family: root.fontName
+            font.pixelSize: 18
+            placeholderText: "Entrez l'adresse IP du flux"
+            placeholderTextColor: "#333333"
+            color: "#333333"
+            inputMethodHints: Qt.ImhPreferNumbers
+
+            property bool showError: false
+
+            background: Rectangle {
+                implicitHeight: 40
+                color: "#FFFFFF"
+                border.color: {
+                    if (ipField.showError && (!ipField.acceptableInput || ipField.text.length === 0))
+                        return "#E53935"
+                    else if (ipField.activeFocus)
+                        return "#009688"
+                    else
+                        return "#B0B0B0"
+                }
+                border.width: 2
+                radius: 8
+            }
+
+            validator: RegularExpressionValidator {
+                regularExpression: /^((25[0-5]|2[0-4]\d|[01]?\d\d?)\.){3}(25[0-5]|2[0-4]\d|[01]?\d\d?)$/
+            }
         }
     }
 }

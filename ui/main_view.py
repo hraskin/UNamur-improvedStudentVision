@@ -10,7 +10,9 @@ from settings.settings_singleton import SettingsSingleton
 
 class MainView(QObject):
     wantCamera = Signal(str)
+    cameraListReady = Signal(list)
     wantReturnToMenu = Signal()
+    startAnalysis = Signal(object)
     frameUpdated = Signal()
 
     def __init__(self):
@@ -45,6 +47,14 @@ class MainView(QObject):
     @Slot()
     def return_to_menu(self):
         self.wantReturnToMenu.emit()
+
+    @Slot(int)
+    @Slot(str)
+    def start_analysis(self, value):
+        self.startAnalysis.emit(value)
+
+    def update_camera_list(self, cameras):
+        self.cameraListReady.emit(cameras)
 
     def show_view(self, view_name: str):
         if self._main_window:
