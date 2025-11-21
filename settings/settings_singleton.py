@@ -2,7 +2,7 @@ class SettingsSingleton(object):
     instance = None
   
     def __init__(self):
-        self.zoomOn = False
+        self.zoomOn = True
         self.edgeOn = True
 
     def getInstance():
