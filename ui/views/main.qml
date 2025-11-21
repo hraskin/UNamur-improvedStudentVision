@@ -28,5 +28,17 @@ ApplicationWindow {
         source: currentView === "menu" ? "menu_page.qml" : "camera.qml"
     }
 
+    Notification {
+        id: notif
+        anchors.top: parent.top
+    }
+
+    Connections {
+        target: backend
+        onCaptureSuccessfulSignal: {
+            notif.showMessage("Capture réussie et enregistrée avec succès.")
+        }
+    }
+
     onClosing: backend.stop_application()
 }
