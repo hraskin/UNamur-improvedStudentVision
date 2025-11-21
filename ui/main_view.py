@@ -60,10 +60,10 @@ class MainView(QObject):
         if self._main_window:
             self._main_window.setProperty("currentView", view_name)
 
-    @Slot()
-    def zoom_on(zoomOn: bool):
-        SettingsSingleton.getInstance().setZoomOn(zoomOn)
+    @Slot(bool)
+    def zoom_on(self, value: bool):
+        SettingsSingleton.get_instance().set_zoom_on(value)
 
-    @Slot()
-    def edge_on(edgeOn: bool):
-        SettingsSingleton.getInstance().setEdgeOn(edgeOn)
+    @Slot(bool)
+    def edge_on(self, value: bool):
+        SettingsSingleton.get_instance().set_edge_on(value)

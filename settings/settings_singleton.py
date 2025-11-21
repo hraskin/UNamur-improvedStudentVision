@@ -1,23 +1,24 @@
 class SettingsSingleton(object):
-    instance = None
+    _instance = None
   
     def __init__(self):
         self.zoomOn = True
         self.edgeOn = True
 
-    def getInstance():
-        if SettingsSingleton.instance == None:
-            SettingsSingleton.instance = SettingsSingleton()
-        return SettingsSingleton.instance
+    @staticmethod
+    def get_instance():
+        if SettingsSingleton._instance is None:
+            SettingsSingleton._instance = SettingsSingleton()
+        return SettingsSingleton._instance
 
-    def getZoomOn(self):
+    def get_zoom_on(self):
         return self.zoomOn
 
-    def setZoomOn(self, zoomOn):
+    def set_zoom_on(self, zoomOn):
         self.zoomOn = zoomOn
 
-    def getEdgeOn(self):
+    def get_edge_on(self):
         return self.edgeOn
 
-    def setEdgeOn(self, edgeOn):
+    def set_edge_on(self, edgeOn):
         self.edgeOn = edgeOn

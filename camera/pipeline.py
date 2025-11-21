@@ -12,11 +12,11 @@ class Pipeline:
     def execute(self, frame):
         self.recognizer.detect_async(frame)
         
-        if SettingsSingleton.getInstance().getEdgeOn():
+        if SettingsSingleton.get_instance().get_edge_on():
             frame = enhance_frame_light(frame, contrast=1.15, brightness=8)
             frame = enhance_frame_edge(frame)
 
-        if self.recognizer.landmarks_to_draw and SettingsSingleton.getInstance().getZoomOn():
+        if self.recognizer.landmarks_to_draw and SettingsSingleton.get_instance().get_zoom_on():
             index_position = self.recognizer.index_position
             self.recognizer.draw_landmarks(frame)
             frame = zoom_on_interest_zone_stable(

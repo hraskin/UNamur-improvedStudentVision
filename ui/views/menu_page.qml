@@ -168,12 +168,25 @@ Rectangle {
                     font.family: root.fontName
                     font.pixelSize: 18
                     model: [
-                        "Reconnaissance de chiffres",
-                        "Reconnaissance de lettres",
-                        "Reconnaissance de symboles"
+                        "Zoom",
+                        "Edge",
+                        "Zoom + edge"
                     ]
+
                     onActivated: {
-                        backend.set_analysis_model(modelSelector.currentIndex)
+                            if (currentIndex === 0) {//Zoom
+                                backend.zoom_on(true)
+                                backend.edge_on(false)
+                            }
+                            else if (currentIndex === 1) {// Edge
+                                backend.zoom_on(false)
+                                backend.edge_on(true)
+                            }
+                            else if (currentIndex === 2) {// Zoom + Edge
+                                backend.zoom_on(true)
+                                backend.edge_on(true)
+                            }
+
                     }
 
                     background: Rectangle {
