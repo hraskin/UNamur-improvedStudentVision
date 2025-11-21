@@ -2,3 +2,4 @@ opencv-python
 cv2-enumerate-cameras
 edge-tts
 pyside6
+mediapipe
