@@ -71,3 +71,18 @@ class MainView(QObject):
     @Slot(bool)
     def edge_on(self, value: bool):
         SettingsSingleton.get_instance().set_edge_on(value)
+    @Slot(int)
+    def set_zoom(self, zoomLevel: int):
+        SettingsSingleton.get_instance().set_zoomLevel(zoomLevel)
+
+    @Slot(int, int)
+    def zoom(self, x: int, y: int):
+        x = int((x - 240)*640/1060)
+        y = int(y*480/800)
+        settings = SettingsSingleton.get_instance()
+        if settings.get_zoomX() == 0 and 0 <x < 640 and 0 < y < 480:
+            settings.set_zoomX(x)
+            settings.set_zoomY(y)
+        else:
+            settings.set_zoomX(0)
+            settings.set_zoomY(0)

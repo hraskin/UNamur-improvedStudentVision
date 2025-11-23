@@ -60,3 +60,11 @@ def zoom_on_interest_zone_stable(frame, index_position, stabilizer, zoom_ratio=1
     # Zoom (agrandit le ROI pour remplir tout le cadre)
     zoomed = cv2.resize(roi, (w, h), interpolation=cv2.INTER_LINEAR)
     return zoomed
+
+
+def zoom(frame, zoomLevel, zoomX, zoomY):
+    x_start = max(0, zoomX - 30*(11-zoomLevel))
+    x_end = zoomX + 30*(10-zoomLevel)
+    y_start = max(0, zoomY - 30*(11-zoomLevel))
+    y_end = zoomY + 30*(10-zoomLevel)
+    return frame[y_start:y_end, x_start:x_end]
