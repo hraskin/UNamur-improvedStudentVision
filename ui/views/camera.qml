@@ -1,5 +1,6 @@
 import QtQuick
 import QtQuick.Controls
+import QtQuick.Controls.Basic
 
 Rectangle {
     id: camView
@@ -17,7 +18,6 @@ Rectangle {
             id: cameraFeed
             anchors.fill: parent
             fillMode: Image.PreserveAspectFit
-            source: "image://camera/live"
         
 
         MouseArea {

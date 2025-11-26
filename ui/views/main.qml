@@ -30,12 +30,13 @@ ApplicationWindow {
 
     Notification {
         id: notif
+        fontFamily: fontName
         anchors.top: parent.top
     }
 
     Connections {
         target: backend
-        onCaptureSuccessfulSignal: {
+        function onCaptureSuccessfulSignal() {
             notif.showMessage("Capture réussie et enregistrée avec succès.")
         }
     }

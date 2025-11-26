@@ -1,9 +1,10 @@
-import QtQuick 2.15
-import QtQuick.Controls 2.15
-import QtQuick.Layouts 1.15
+import QtQuick
+import QtQuick.Controls
+import QtQuick.Layouts
 
 Rectangle {
     id: notification
+    property string fontFamily: "sans-serif"
     property real maxWidth: parent.width - 20
     width: Math.min(Math.max(notifText.paintedWidth + 40, parent.width / 3), maxWidth)
     height: Math.max(notifText.paintedHeight + 20, 50)
@@ -30,8 +31,9 @@ Rectangle {
         id: notifText
         anchors.centerIn: parent
         text: ""
-        color: "#202020"
+        font.family: notification.fontFamily
         font.pixelSize: 16
+        color: "#202020"
         wrapMode: Text.WordWrap
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter

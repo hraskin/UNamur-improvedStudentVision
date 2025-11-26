@@ -29,10 +29,9 @@ class MainView(QObject):
 
     def start(self):
         qml_path = os.path.join(os.path.dirname(__file__), "views", "main.qml")
-        self._engine.load(qml_path)
-        self._engine.load(os.path.join(os.path.dirname(__file__), "views", "main.qml"))
-        self._main_window = self._engine.rootObjects()[-1]
         self._engine.rootContext().setContextProperty("backend", self)
+        self._engine.load(qml_path)
+        self._main_window = self._engine.rootObjects()[-1]
 
         shortcut = QShortcut(QKeySequence("Ctrl+S"), self._main_window)
         shortcut.activated.connect(self._want_capture)
