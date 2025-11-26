@@ -8,11 +8,12 @@ class MainPresenter:
         self._view = view
         self._engine = self._view.engine
         self._camera_presenter = None
-        self._keyword_listener = KeywordsListener(on_wakeword_detected=self._handle_wakeword)
+        self._keyword_listener = KeywordsListener(on_wakeword_detected=self._handle_capture())
 
         self._view.wantCamera.connect(self._handle_camera_type)
         self._view.startAnalysis.connect(self.launch_camera)
         self._view.wantReturnToMenu.connect(self.return_to_menu)
+        self._view.wantCapture.connect(self._handle_capture)
 
         self._view.start()
 
@@ -46,5 +47,6 @@ class MainPresenter:
             self._camera_presenter.stop()
             self._camera_presenter = None
 
-    def _handle_wakeword(self):
-        self._camera_presenter.want_capture_image()
+    def _handle_capture(self):
+        if self._camera_presenter:
+            self._camera_presenter.want_capture_image()

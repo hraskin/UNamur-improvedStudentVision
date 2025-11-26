@@ -1,7 +1,7 @@
-# main_view.py
 import os
 
 from PySide6.QtCore import QObject, Signal, Slot
+from PySide6.QtGui import QShortcut, QKeySequence
 from PySide6.QtQml import QQmlApplicationEngine
 from PySide6.QtWidgets import QApplication
 
@@ -12,6 +12,7 @@ class MainView(QObject):
     wantCamera = Signal(str)
     cameraListReady = Signal(list)
     wantReturnToMenu = Signal()
+    wantCapture = Signal()
     startAnalysis = Signal(object)
     frameUpdated = Signal()
     captureSuccessfulSignal = Signal()
@@ -28,16 +29,21 @@ class MainView(QObject):
 
     def start(self):
         qml_path = os.path.join(os.path.dirname(__file__), "views", "main.qml")
-        print(qml_path)
         self._engine.load(qml_path)
-        print(self._engine.rootObjects())
         self._engine.load(os.path.join(os.path.dirname(__file__), "views", "main.qml"))
         self._main_window = self._engine.rootObjects()[-1]
         self._engine.rootContext().setContextProperty("backend", self)
+
+        shortcut = QShortcut(QKeySequence("Ctrl+S"), self._main_window)
+        shortcut.activated.connect(self._want_capture)
+
         self._app.exec()
 
     def capture_successful(self):
         self.captureSuccessfulSignal.emit()
+
+    def _want_capture(self):
+        self.wantCapture.emit()
 
     @Slot()
     def stop_application(self):

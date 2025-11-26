@@ -28,8 +28,6 @@ Rectangle {
         }
     }
 
-    
-
     Button {
         id: backBtn
         text: "⬅ Retour"
@@ -38,16 +36,6 @@ Rectangle {
         anchors.margins: 20
         onClicked: backend.return_to_menu()
     }
-
-    Button {
-        id: screen
-        text: "screen"
-        anchors.left: parent.left
-        anchors.top: parent.top
-        anchors.margins: 40
-        onClicked: backend.screen()
-    }
-
     
     Slider {
         id: slider
