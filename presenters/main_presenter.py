@@ -14,6 +14,7 @@ class MainPresenter:
         self._view.startAnalysis.connect(self.launch_camera)
         self._view.wantReturnToMenu.connect(self.return_to_menu)
         self._view.wantCapture.connect(self._handle_capture)
+        self._view.wantStopApplication.connect(self._stop_application)
 
         self._view.start()
 
@@ -50,3 +51,6 @@ class MainPresenter:
     def _handle_capture(self):
         if self._camera_presenter:
             self._camera_presenter.want_capture_image()
+
+    def _stop_application(self):
+        self._stop_camera()

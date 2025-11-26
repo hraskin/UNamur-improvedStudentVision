@@ -13,6 +13,7 @@ class MainView(QObject):
     cameraListReady = Signal(list)
     wantReturnToMenu = Signal()
     wantCapture = Signal()
+    wantStopApplication = Signal()
     startAnalysis = Signal(object)
     frameUpdated = Signal()
     captureSuccessfulSignal = Signal()
@@ -46,8 +47,10 @@ class MainView(QObject):
 
     @Slot()
     def stop_application(self):
+        self.wantStopApplication.emit()
         if hasattr(self, "_main_window"):
             self._main_window.destroy()
+
 
     @Slot(str)
     def want_camera(self, camera_type: str):
