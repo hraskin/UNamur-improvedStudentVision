@@ -1,4 +1,5 @@
 import os
+import sys
 import threading
 import time
 import sounddevice as sd
@@ -10,14 +11,22 @@ class KeywordsListener:
     def __init__(self, on_wakeword_detected):
         base_dir = os.path.dirname(os.path.abspath(__file__))
 
+        if sys.platform == "win32":
+            system = "windows"
+            access_keys = ("", "")
+        else:
+            system = "mac"
+            access_keys = ("Pnng6/uadi9yKghjeO9gW0wInNTP+mG6Fqd4cAu/Z2i7xqwwgJMF0g==", "Nt3JEg9Agd6lGfI0zoi20F+K4YkvwZRpa5kCrfjzS1yYBOyeOPEdEw==")
+
+
         self._porc_en = pvporcupine.create(
-            access_key="Pnng6/uadi9yKghjeO9gW0wInNTP+mG6Fqd4cAu/Z2i7xqwwgJMF0g==",
+            access_key=access_keys[0],
             keyword_paths=[os.path.join(base_dir, "keywords/screen_en_mac_v3_0_0.ppn")]
         )
 
         self._porc_fr = pvporcupine.create(
-            access_key="Nt3JEg9Agd6lGfI0zoi20F+K4YkvwZRpa5kCrfjzS1yYBOyeOPEdEw==",
-            keyword_paths=[os.path.join(base_dir, "keywords/capture_fr_mac_v3_0_0.ppn")],
+            access_key=access_keys[1],
+            keyword_paths=[os.path.join(base_dir, f"keywords/capture_fr_{system}_v3_0_0.ppn")],
             model_path=os.path.join(base_dir, "models/porcupine_params_fr.pv")
         )
 
