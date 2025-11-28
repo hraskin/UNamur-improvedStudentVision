@@ -8,7 +8,7 @@ class MainPresenter:
         self._view = view
         self._engine = self._view.engine
         self._camera_presenter = None
-        self._keyword_listener = KeywordsListener(on_wakeword_detected=self._handle_capture())
+        self._keyword_listener = KeywordsListener(on_wakeword_detected=self._handle_capture)
 
         self._view.wantCamera.connect(self._handle_camera_type)
         self._view.startAnalysis.connect(self.launch_camera)
