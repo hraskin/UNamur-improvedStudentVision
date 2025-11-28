@@ -13,7 +13,7 @@ class KeywordsListener:
 
         if sys.platform == "win32":
             system = "windows"
-            access_keys = ("", "")
+            access_keys = ("c0+lQ4K0RoB5dZ8QzZSV95hvyRbgTSPIY7+55kjrxOJ0Bi1Acqvo7Q==", "9qLp/zHXF2D2QpGRRS6AcsrLEpMKFiP+MeGyxXiG1HU1pbmOfolf8Q==")
         else:
             system = "mac"
             access_keys = ("Pnng6/uadi9yKghjeO9gW0wInNTP+mG6Fqd4cAu/Z2i7xqwwgJMF0g==", "Nt3JEg9Agd6lGfI0zoi20F+K4YkvwZRpa5kCrfjzS1yYBOyeOPEdEw==")
@@ -21,7 +21,7 @@ class KeywordsListener:
 
         self._porc_en = pvporcupine.create(
             access_key=access_keys[0],
-            keyword_paths=[os.path.join(base_dir, "keywords/screen_en_mac_v3_0_0.ppn")]
+            keyword_paths=[os.path.join(base_dir, f"keywords/screen_en_{system}_v3_0_0.ppn")]
         )
 
         self._porc_fr = pvporcupine.create(
