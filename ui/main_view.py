@@ -1,7 +1,7 @@
 import os
 
 from PySide6.QtCore import QObject, Signal, Slot
-from PySide6.QtGui import QShortcut, QKeySequence
+from PySide6.QtGui import QKeySequence, QShortcut
 from PySide6.QtQml import QQmlApplicationEngine
 from PySide6.QtWidgets import QApplication
 
@@ -83,14 +83,6 @@ class MainView(QObject):
     def set_zoom(self, zoomLevel: int):
         SettingsSingleton.get_instance().set_zoomLevel(zoomLevel)
 
-    @Slot(int, int)
-    def zoom(self, x: int, y: int):
-        x = int((x - 240)*640/1060)
-        y = int(y*480/800)
-        settings = SettingsSingleton.get_instance()
-        if settings.get_zoomX() == 0 and 0 <x < 640 and 0 < y < 480:
-            settings.set_zoomX(x)
-            settings.set_zoomY(y)
-        else:
-            settings.set_zoomX(0)
-            settings.set_zoomY(0)
+    @Slot(int, int, int, int)
+    def zoom(self, x: int, y: int, width: int, height: int):
+        SettingsSingleton.get_instance().updateZoom(x, y, width, height)

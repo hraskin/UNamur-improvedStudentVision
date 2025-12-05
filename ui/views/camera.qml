@@ -23,7 +23,7 @@ Rectangle {
         MouseArea {
             anchors.fill: parent
             onClicked: {
-                backend.zoom(mouseX, mouseY)
+                backend.zoom(mouseX, mouseY, camView.width, camView.height)
             }
         }
     }

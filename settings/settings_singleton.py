@@ -43,3 +43,15 @@ class SettingsSingleton(object):
     
     def set_zoomY(self, zoomY):
         self.zoomY = zoomY
+
+    def updateZoom(self, x, y, screen_width, screen_height):
+        # dimension image: 640 * 480
+        print(x, y, screen_width, screen_height)
+        x = int(x*640/screen_width)
+        y = int(y*480/screen_height)
+        if self.zoomX == 0 and 0 < x < 640 and 0 < y < 480:
+            self.zoomX = x
+            self.zoomY = y
+        else:
+            self.zoomX = 0
+            self.zoomY = 0
