@@ -33,7 +33,7 @@ class MainPresenter:
 
     def _handle_camera_type(self, camera_type):
         if camera_type == "index":
-            cameras= [camera_info.name for camera_info in enumerate_cameras()]
+            cameras = list(dict.fromkeys(camera_info.name for camera_info in enumerate_cameras()))
             self._view.update_camera_list(cameras)
         elif camera_type == "flow":
             self._view.update_camera_list([])
