@@ -16,16 +16,18 @@ class Pipeline:
         if settings.get_zoomX() != 0:
             frame = zoom(frame, settings.get_zoomLevel(), settings.get_zoomX(), settings.get_zoomY())
 
-        if settings.get_edge_on():
-            frame = enhance_frame_light(frame, contrast=1.15, brightness=8)
-            frame = enhance_frame_edge(frame)
+        
 
-        if self.recognizer.landmarks_to_draw and settings.get_zoom_on():
+        elif self.recognizer.landmarks_to_draw and settings.get_zoom_on():
             index_position = self.recognizer.index_position
             self.recognizer.draw_landmarks(frame)
             frame = zoom_on_interest_zone_stable(
                 frame, index_position, self.stabilizer,
                 zoom_ratio=1.4, zone_ratio=0.55
             )
+
+        if settings.get_edge_on():
+            frame = enhance_frame_light(frame, contrast=1.15, brightness=8)
+            frame = enhance_frame_edge(frame)
 
         return frame

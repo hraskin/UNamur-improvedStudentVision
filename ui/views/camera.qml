@@ -43,6 +43,7 @@ Rectangle {
         from: 0
         to: 10
         anchors.bottom: camView.bottom
+        anchors.bottomMargin: 30
         anchors.horizontalCenter: camView.horizontalCenter
 
         background: Rectangle {
@@ -51,9 +52,9 @@ Rectangle {
             implicitWidth: 200
             implicitHeight: 4
             width: slider.availableWidth
-            height: implicitHeight
+            height: 10
             radius: 2
-            color: "#bdbebf"
+            color: "#d64a13ff"
 
             Rectangle {
                 width: slider.visualPosition * parent.width
@@ -66,10 +67,10 @@ Rectangle {
         handle: Rectangle {
             x: slider.leftPadding + slider.visualPosition * (slider.availableWidth - width)
             y: slider.topPadding + slider.availableHeight / 2 - height / 2
-            implicitWidth: 26
-            implicitHeight: 26
-            radius: 13
-            color: slider.pressed ? "#f0f0f0" : "#f6f6f6"
+            implicitWidth: 37
+            implicitHeight: 37
+            radius: 30
+            color: slider.pressed ? "#f0f0f0" : "#f6f6f6ff"
             border.color: "#bdbebf"
         }
 
