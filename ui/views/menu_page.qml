@@ -39,7 +39,7 @@ Rectangle {
         Text {
             text: "Choisissez votre type de caméra et le modèle d'analyse adapté au tableau."
             font.family: root.fontName
-            font.pixelSize: 20
+            font.pixelSize: 24
             color: "#444"
             horizontalAlignment: Text.AlignHCenter
             wrapMode: Text.WordWrap
@@ -80,14 +80,14 @@ Rectangle {
                         id: indexCameraBtn
                         text: "Caméra par index"
                         font.family: root.fontName
-                        font.pixelSize: 18
+                        font.pixelSize: 24
                         background: Rectangle {
                             implicitWidth: 240
                             implicitHeight: 60
                             radius: 12
-                            color: menu.selectedType === "index" ? "#B39DDB" : "#D1C4E9"
-                            border.color: "#7E57C2"
-                            border.width: 2
+                            color: menu.selectedType === "index" ? "#e80909" : "#2E2E2E"
+                            border.color: "#FFFFFF"
+                            border.width: 3
                         }
 
                         MouseArea {
@@ -105,14 +105,14 @@ Rectangle {
                         id: flowCameraBtn
                         text: "Caméra par flux"
                         font.family: root.fontName
-                        font.pixelSize: 18
+                        font.pixelSize: 24
                         background: Rectangle {
                             implicitWidth: 240
                             implicitHeight: 60
                             radius: 12
-                            color: menu.selectedType === "flow" ? "#80CBC4" : "#B2DFDB"
-                            border.color: "#009688"
-                            border.width: 2
+                            color: menu.selectedType === "flow" ? "#2962FF" : "#2E2E2E"
+                            border.color: "#FFFFFF"
+                            border.width: 3
                         }
 
                         MouseArea {
@@ -166,7 +166,7 @@ Rectangle {
                     Layout.alignment: Qt.AlignHCenter
                     Layout.preferredWidth: 300
                     font.family: root.fontName
-                    font.pixelSize: 18
+                    font.pixelSize: 24
                     model: [
                         "Zoom",
                         "Edge",
@@ -296,7 +296,17 @@ Rectangle {
             MouseArea {
                 anchors.fill: parent
                 cursorShape: Qt.PointingHandCursor
-                enabled: true
+
+                onClicked: {
+                    if (menu.selectedType !== "flow") {
+                        menu.selectedType = "flow"
+                        backend.want_camera("flow")
+                    }
+                }
+            }
+            MouseArea {
+                anchors.fill: parent
+                cursorShape: Qt.PointingHandCursor
 
                 onClicked: {
                     if (menu.selectedType === "flow") {
@@ -313,17 +323,15 @@ Rectangle {
                         }
                         backend.start_analysis(cameraLoader.item.currentIndex)
                     }
-                    else {
-                        return
-                    }
                 }
             }
+
         }
 
         Text {
             text: "© 2025 ImprovedStudentVision — Accessibilité avant tout"
             font.family: root.fontName
-            font.pixelSize: 14
+            font.pixelSize: 18
             color: "#777"
             horizontalAlignment: Text.AlignHCenter
             Layout.alignment: Qt.AlignHCenter
@@ -340,7 +348,7 @@ Rectangle {
             Layout.preferredWidth: 300
             model: menu.cameraList
             font.family: root.fontName
-            font.pixelSize: 18
+            font.pixelSize: 24
 
             background: Rectangle {
                 implicitHeight: 40
@@ -348,11 +356,13 @@ Rectangle {
                 border.color: cameraDropdown.activeFocus ? "#7E57C2" : "#B0B0B0"
                 border.width: 2
                 radius: 8
+
             }
 
             contentItem: Text {
                 text: cameraDropdown.displayText
-                font: cameraDropdown.font
+                font.pixelSize: 24
+                font.family: root.fontName
                 color: "#333333"
                 verticalAlignment: Text.AlignVCenter
                 leftPadding: 10
@@ -435,7 +445,7 @@ Rectangle {
             id: ipField
             Layout.preferredWidth: 300
             font.family: root.fontName
-            font.pixelSize: 18
+            font.pixelSize: 24
             placeholderText: "Entrez l'adresse IP du flux"
             placeholderTextColor: "#333333"
             color: "#333333"
