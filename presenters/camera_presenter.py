@@ -34,12 +34,13 @@ class CameraPresenter(QObject):
     def want_capture_image(self):
         if self._last_image:
             timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-            file_path = f"capture_{timestamp}.png"
+            file_path = f"capture_{timestamp}"
 
-            success = self._last_image.save(file_path)
+            success = self._last_image.save(f'{file_path}.jpg')
             if success:
                 self.captureSuccessful.emit()
-
+                return file_path
+        return None
 
     def _on_frame_ready(self, qimg):
         self._last_image = qimg

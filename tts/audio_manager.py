@@ -1,14 +1,15 @@
 import edge_tts
 
-async def text_to_speech(message: str) -> None:
+async def text_to_speech(message: str, file_path: str) -> None:
     """
     Converts the input text message into speech and saves it to a generated audio file.
 
     Args:
         message (str): The text message to convert into speech.
+        file_path (str): The path where the generated audio file will be saved.
 
     This method uses the configured voice and converts the input message
     to speech using the edge_tts library. The generated audio is saved to the path specified.
     """
     tts = edge_tts.Communicate(message, voice='fr-FR-RemyMultilingualNeural')
-    await tts.save('output_audio.mp3')
+    await tts.save(f'{file_path}.mp3')

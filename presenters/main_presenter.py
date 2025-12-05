@@ -1,6 +1,12 @@
+import asyncio
+
+from braille.braille import text_to_braille
 from keywords_detection.keywords_listerner import KeywordsListener
+from ocr.ocr_manager import OCRManager
 from presenters.camera_presenter import CameraPresenter
 from cv2_enumerate_cameras import enumerate_cameras
+
+from tts.audio_manager import text_to_speech
 
 
 class MainPresenter:
@@ -9,6 +15,7 @@ class MainPresenter:
         self._engine = self._view.engine
         self._camera_presenter = None
         self._keyword_listener = KeywordsListener(on_wakeword_detected=self._handle_capture)
+        self._ocr_manager = OCRManager()
 
         self._view.wantCamera.connect(self._handle_camera_type)
         self._view.startAnalysis.connect(self.launch_camera)
@@ -50,7 +57,10 @@ class MainPresenter:
 
     def _handle_capture(self):
         if self._camera_presenter:
-            self._camera_presenter.want_capture_image()
+            img_path = self._camera_presenter.want_capture_image()
+            text = self._ocr_manager.extract_text(img_path)
+            text_to_braille(text)
+            asyncio.run(text_to_speech(text, img_path))
 
     def _stop_application(self):
         self._stop_camera()
