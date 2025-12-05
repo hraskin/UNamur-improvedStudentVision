@@ -85,7 +85,7 @@ Rectangle {
                             implicitWidth: 240
                             implicitHeight: 60
                             radius: 12
-                            color: menu.selectedType === "index" ? "#e80909" : "#2E2E2E"
+                            color: menu.selectedType === "index" ? "#FFD600" : "#2E2E2E"
                             border.color: "#FFFFFF"
                             border.width: 3
                         }
@@ -256,7 +256,7 @@ Rectangle {
                                 }
 
                                 background: Rectangle {
-                                    color: highlighted ? "#E8E8E8" : "transparent"
+                                    color: highlighted ? "#E8E8E8" : (index % 2 === 0 ? "#E0E0E0E0" : "#FFFFFF")
                                 }
                             }
 
