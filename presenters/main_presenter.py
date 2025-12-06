@@ -1,12 +1,12 @@
-import asyncio
+from threading import Lock
 
-from braille.braille import text_to_braille
+from PySide6.QtCore import QThread
 from keywords_detection.keywords_listerner import KeywordsListener
 from ocr.ocr_manager import OCRManager
 from presenters.camera_presenter import CameraPresenter
 from cv2_enumerate_cameras import enumerate_cameras
-
-from tts.audio_manager import text_to_speech
+from tts.audio_manager import AudioManager
+from workers.capture_process_worker import CaptureProcessWorker
 
 
 class MainPresenter:
@@ -16,6 +16,10 @@ class MainPresenter:
         self._camera_presenter = None
         self._keyword_listener = KeywordsListener(on_wakeword_detected=self._handle_capture)
         self._ocr_manager = OCRManager()
+        self._audio_manager = AudioManager()
+        self._capture_lock = Lock()
+        self._threads = []
+        self._workers = []
 
         self._view.wantCamera.connect(self._handle_camera_type)
         self._view.startAnalysis.connect(self.launch_camera)
@@ -56,11 +60,32 @@ class MainPresenter:
             self._camera_presenter = None
 
     def _handle_capture(self):
-        if self._camera_presenter:
-            img_path = self._camera_presenter.want_capture_image()
-            text = self._ocr_manager.extract_text(img_path)
-            text_to_braille(text)
-            asyncio.run(text_to_speech(text, img_path))
+        if not self._camera_presenter:
+            return
+
+        thread = QThread()
+        worker = CaptureProcessWorker(
+            self._camera_presenter,
+            self._ocr_manager,
+            self._audio_manager,
+            self._capture_lock
+        )
+
+        worker.moveToThread(thread)
+        thread.started.connect(worker.run)
+
+        worker.finished.connect(thread.quit)
+        worker.finished.connect(worker.deleteLater)
+        thread.finished.connect(thread.deleteLater)
+        thread.finished.connect(lambda: self._cleanup(thread, worker))
+
+        self._threads.append(thread)
+        self._workers.append(worker)
+        thread.start()
+
+    def _cleanup(self, thread, worker):
+        self._threads.remove(thread)
+        self._workers.remove(worker)
 
     def _stop_application(self):
         self._stop_camera()

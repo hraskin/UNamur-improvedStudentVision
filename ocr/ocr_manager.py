@@ -29,10 +29,6 @@ class OCRManager:
             for block in result.read.blocks:
                 for line in block.lines:
                     text = line.text.strip()
-
-                    if "FPS" in text and text.lower().endswith("frame"):
-                        continue
-
                     texts.append(text)
 
         return "\n".join(texts)

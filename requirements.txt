@@ -4,3 +4,5 @@ edge-tts
 pyside6
 mediapipe
 pvporcupine
+azure-ai-vision-imageanalysis
+pydub

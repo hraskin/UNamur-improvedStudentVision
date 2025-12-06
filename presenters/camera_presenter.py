@@ -22,6 +22,7 @@ class CameraPresenter(QObject):
 
         self._thread.started.connect(self._worker.start)
         self._worker.frame_ready.connect(self._on_frame_ready)
+        self._worker.raw_frame_ready.connect(self._on_raw_frame_ready)
         self._thread.start()
 
     def stop(self):
@@ -43,6 +44,8 @@ class CameraPresenter(QObject):
         return None
 
     def _on_frame_ready(self, qimg):
-        self._last_image = qimg
         self._provider.update_image(qimg)
         self.frameUpdated.emit()
+
+    def _on_raw_frame_ready(self, qimg):
+        self._last_image = qimg

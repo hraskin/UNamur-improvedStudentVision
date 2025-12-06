@@ -1,15 +1,24 @@
+import asyncio
 import edge_tts
+from pydub import AudioSegment
+from pydub.playback import play
+import threading
 
-async def text_to_speech(message: str, file_path: str) -> None:
-    """
-    Converts the input text message into speech and saves it to a generated audio file.
+class AudioManager:
+    def __init__(self):
+        self._loop = asyncio.new_event_loop()
+        self._thread = threading.Thread(target=self._loop.run_forever, daemon=True)
+        self._thread.start()
 
-    Args:
-        message (str): The text message to convert into speech.
-        file_path (str): The path where the generated audio file will be saved.
+    async def _text_to_speech_async(self, message: str, out_path: str):
+        tts = edge_tts.Communicate(message, voice="fr-FR-RemyMultilingualNeural")
+        await tts.save(out_path)
 
-    This method uses the configured voice and converts the input message
-    to speech using the edge_tts library. The generated audio is saved to the path specified.
-    """
-    tts = edge_tts.Communicate(message, voice='fr-FR-RemyMultilingualNeural')
-    await tts.save(f'{file_path}.mp3')
+    def _run_async(self, coro):
+        return asyncio.run_coroutine_threadsafe(coro, self._loop).result()
+
+    def play_audio(self, file_path: str, message: str) -> None:
+        out_path = f"{file_path}.mp3"
+        self._run_async(self._text_to_speech_async(message, out_path))
+        audio = AudioSegment.from_mp3(out_path)
+        play(audio)
