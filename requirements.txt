@@ -6,3 +6,4 @@ mediapipe
 pvporcupine
 azure-ai-vision-imageanalysis
 pydub
+dotenv
