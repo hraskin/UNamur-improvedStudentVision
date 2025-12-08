@@ -24,7 +24,7 @@ Rectangle {
         spacing: 25
 
         Text {
-            text: "🎯 Configuration d'ImprovedStudentVision"
+            text: "Configuration d'ImprovedStudentVision"
             font.family: root.fontName
             font.pixelSize: 34
             font.bold: true
@@ -64,7 +64,7 @@ Rectangle {
                 spacing: 16
 
                 Text {
-                    text: "🎥 Sélection de la caméra"
+                    text: "Sélection de la caméra"
                     font.family: root.fontName
                     font.pixelSize: 24
                     font.bold: true
@@ -85,8 +85,8 @@ Rectangle {
                             implicitWidth: 240
                             implicitHeight: 60
                             radius: 12
-                            color: menu.selectedType === "index" ? "#FFD600" : "#2E2E2E"
-                            border.color: "#FFFFFF"
+                            color: menu.selectedType === "index" ? "#2962FF" : "#2E2E2E"
+                            border.color: "#ff0000"
                             border.width: 3
                         }
 
@@ -111,7 +111,7 @@ Rectangle {
                             implicitHeight: 60
                             radius: 12
                             color: menu.selectedType === "flow" ? "#2962FF" : "#2E2E2E"
-                            border.color: "#FFFFFF"
+                            border.color: "#ff0000"
                             border.width: 3
                         }
 
@@ -153,7 +153,7 @@ Rectangle {
                 spacing: 16
 
                 Text {
-                    text: "🧠 Sélection du modèle d'analyse"
+                    text: "Sélection du modèle d'analyse"
                     font.family: root.fontName
                     font.pixelSize: 24
                     font.bold: true
@@ -192,7 +192,7 @@ Rectangle {
                     background: Rectangle {
                         implicitHeight: 40
                         color: "#FFFFFF"
-                        border.color: modelSelector.activeFocus ? "#7E57C2" : "#B0B0B0"
+                        border.color: modelSelector.activeFocus ? "#ff0000" : "#B0B0B0"
                         border.width: 2
                         radius: 8
                     }
@@ -277,21 +277,39 @@ Rectangle {
             }
         }
 
-        Button {
+       Button {
             id: startButton
             text: "Lancer l'analyse"
             font.family: root.fontName
-            font.pixelSize: 20
+            font.pixelSize: 24
+            hoverEnabled: true
+
             Layout.alignment: Qt.AlignHCenter
             Layout.preferredWidth: 300
             Layout.preferredHeight: 60
 
+            contentItem: Text {
+                text: startButton.text
+                font: startButton.font
+
+                color: startButton.hovered ? "white" :
+                       "black"
+
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+            }
+
             background: Rectangle {
                 radius: 12
-                color: startButton.down ? "#81C784" : "#A5D6A7"
-                border.color: "#388E3C"
-                border.width: 2
+                border.width: 3
+                border.color: "#ff0000"
+
+                color: startButton.hovered ? "black" : "white"
             }
+
+
+
+
 
             MouseArea {
                 anchors.fill: parent
@@ -329,7 +347,7 @@ Rectangle {
         }
 
         Text {
-            text: "© 2025 ImprovedStudentVision — Accessibilité avant tout"
+            text: "© 2025 ImprovedBoardVision - Accessibilité avant tout"
             font.family: root.fontName
             font.pixelSize: 18
             color: "#777"
@@ -353,7 +371,7 @@ Rectangle {
             background: Rectangle {
                 implicitHeight: 40
                 color: "#FFFFFF"
-                border.color: cameraDropdown.activeFocus ? "#7E57C2" : "#B0B0B0"
+                border.color: cameraDropdown.activeFocus ? "#ff0000" : "#B0B0B0"
                 border.width: 2
                 radius: 8
 
@@ -460,7 +478,7 @@ Rectangle {
                     if (ipField.showError && (!ipField.acceptableInput || ipField.text.length === 0))
                         return "#E53935"
                     else if (ipField.activeFocus)
-                        return "#009688"
+                        return "#ff0000"
                     else
                         return "#B0B0B0"
                 }
