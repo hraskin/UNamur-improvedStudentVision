@@ -2,11 +2,11 @@ class SettingsSingleton(object):
     _instance = None
   
     def __init__(self):
-        self.zoomOn = True
-        self.edgeOn = True
-        self.zoomLevel = 0
-        self.zoomX = 0
-        self.zoomY = 0
+        self._zoom_on = True
+        self._edge_on = True
+        self._zoom_level = 1
+        self._zoom_x = 0
+        self._zoom_y = 0
 
     @staticmethod
     def get_instance():
@@ -15,43 +15,33 @@ class SettingsSingleton(object):
         return SettingsSingleton._instance
 
     def get_zoom_on(self):
-        return self.zoomOn
+        return self._zoom_on
 
-    def set_zoom_on(self, zoomOn):
-        self.zoomOn = zoomOn
+    def set_zoom_on(self, zoom_on):
+        self._zoom_on = zoom_on
 
     def get_edge_on(self):
-        return self.edgeOn
+        return self._edge_on
 
-    def set_edge_on(self, edgeOn):
-        self.edgeOn = edgeOn
+    def set_edge_on(self, edge_on):
+        self._edge_on = edge_on
 
-    def get_zoomLevel(self):
-        return self.zoomLevel
+    def get_zoom_level(self):
+        return self._zoom_level
     
-    def set_zoomLevel(self, zoomLevel):
-        self.zoomLevel = zoomLevel
+    def set_zoom_level(self, zoom_level):
+        self._zoom_level = zoom_level
     
-    def get_zoomX(self):
-        return self.zoomX
-    
-    def set_zoomX(self, zoomX):
-        self.zoomX = zoomX
+    def get_zoom_x(self):
+        return self._zoom_x
 
-    def get_zoomY(self):
-        return self.zoomY
-    
-    def set_zoomY(self, zoomY):
-        self.zoomY = zoomY
+    def get_zoom_y(self):
+        return self._zoom_y
 
-    def updateZoom(self, x, y, screen_width, screen_height):
-        # dimension image: 640 * 480
-        print(x, y, screen_width, screen_height)
-        x = int(x*640/screen_width)
-        y = int(y*480/screen_height)
-        if self.zoomX == 0 and 0 < x < 640 and 0 < y < 480:
-            self.zoomX = x
-            self.zoomY = y
+    def update_zoom(self, x, y):
+        if self._zoom_x == 0:
+            self._zoom_x = x
+            self._zoom_y = y
         else:
-            self.zoomX = 0
-            self.zoomY = 0
+            self._zoom_x = 0
+            self._zoom_y = 0

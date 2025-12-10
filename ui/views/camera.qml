@@ -23,7 +23,7 @@ Rectangle {
         MouseArea {
             anchors.fill: parent
             onClicked: {
-                backend.zoom(mouseX, mouseY, camView.width, camView.height)
+                backend.zoom(mouseX, mouseY)
             }
         }
     }
@@ -40,7 +40,7 @@ Rectangle {
     Slider {
         id: slider
         value: 1
-        from: 0
+        from: 1
         to: 10
         anchors.bottom: camView.bottom
         anchors.bottomMargin: 30

@@ -19,31 +19,32 @@ class ZoomStabilizer:
         return int(self.prev_x), int(self.prev_y)
 
 
-def zoom_on_interest_zone_stable(frame, index_position, stabilizer, zoom_ratio=1.4, zone_ratio=0.5):
+def zoom_on_interest_zone_stable(frame, position, stabilizer, zoom_ratio, zone_ratio):
     """
     Zoom stabilisé sur la zone d'intérêt autour du doigt, en gardant les proportions.
 
     - frame : image OpenCV
-    - index_position : landmark MediaPipe (coordonnées normalisées 0–1)
+    - position : landmark MediaPipe (coordonnées normalisées 0–1)
     - stabilizer : instance de ZoomStabilizer (pour lisser la position)
     - zoom_ratio : intensité du zoom
     - zone_ratio : proportion visible de l’image (ex: 0.5 = moitié du cadre)
     """
-    if index_position is None:
+    if position is None:
         return frame
 
     h, w, _ = frame.shape
     aspect_ratio = w / h
 
-    # Coordonnées du doigt (en pixels)
-    cx = int(index_position.x * w)
-    cy = int(index_position.y * h)
+    cx = int(position.x * w)
+    cy = int(position.y * h)
 
     # Lissage de la position
     cx, cy = stabilizer.smooth(cx, cy)
 
+    zoomed_zone_ratio = max(0.05, zone_ratio / zoom_ratio)
+
     # Taille de la zone visible (proportion de l’image)
-    visible_w = int(w * zone_ratio)
+    visible_w = int(w * zoomed_zone_ratio)
     visible_h = int(visible_w / aspect_ratio)
 
     # Définition du rectangle centré sur la position lissée
@@ -60,11 +61,3 @@ def zoom_on_interest_zone_stable(frame, index_position, stabilizer, zoom_ratio=1
     # Zoom (agrandit le ROI pour remplir tout le cadre)
     zoomed = cv2.resize(roi, (w, h), interpolation=cv2.INTER_LINEAR)
     return zoomed
-
-
-def zoom(frame, zoomLevel, zoomX, zoomY):
-    x_start = max(0, zoomX - 30*(11-zoomLevel))
-    x_end = zoomX + 30*(10-zoomLevel)
-    y_start = max(0, zoomY - 30*(11-zoomLevel))
-    y_end = zoomY + 30*(10-zoomLevel)
-    return frame[y_start:y_end, x_start:x_end]

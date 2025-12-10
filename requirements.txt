@@ -1,6 +1,6 @@
 opencv-python
 cv2-enumerate-cameras
-edge-tts
+edge-tts==7.0.0
 pyside6
 mediapipe
 pvporcupine
