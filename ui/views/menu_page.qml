@@ -81,6 +81,13 @@ Rectangle {
                         text: "Caméra par index"
                         font.family: root.fontName
                         font.pixelSize: 24
+                        contentItem: Text {
+                            text: flowCameraBtn.text
+                            font: flowCameraBtn.font
+                            horizontalAlignment: Text.AlignHCenter
+                            verticalAlignment: Text.AlignVCenter
+                            color: "#FFFFFF"
+                        }
                         background: Rectangle {
                             implicitWidth: 240
                             implicitHeight: 60
@@ -104,6 +111,13 @@ Rectangle {
                     Button {
                         id: flowCameraBtn
                         text: "Caméra par flux"
+                        contentItem: Text {
+                            text: flowCameraBtn.text
+                            font: flowCameraBtn.font
+                            horizontalAlignment: Text.AlignHCenter
+                            verticalAlignment: Text.AlignVCenter
+                            color: "#FFFFFF"
+                        }
                         font.family: root.fontName
                         font.pixelSize: 24
                         background: Rectangle {
