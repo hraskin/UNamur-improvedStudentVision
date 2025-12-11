@@ -11,7 +11,6 @@ class AudioManager:
         self._thread.start()
 
     async def _text_to_speech_async(self, message: str, out_path: str):
-        print(message)
         tts = edge_tts.Communicate(message, voice="fr-FR-RemyMultilingualNeural")
         await tts.save(out_path)
 

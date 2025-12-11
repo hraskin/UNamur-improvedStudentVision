@@ -88,4 +88,7 @@ class MainPresenter:
         self._workers.remove(worker)
 
     def _stop_application(self):
+        for thread in self._threads:
+            thread.quit()
+            thread.wait()
         self._stop_camera()

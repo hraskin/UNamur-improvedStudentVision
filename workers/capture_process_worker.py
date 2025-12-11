@@ -18,6 +18,8 @@ class CaptureProcessWorker(QObject):
             file_path = self._camera.want_capture_image()
 
         text = self._ocr.extract_text(file_path)
-        text_to_braille(text)
-        self._audio.play_audio(file_path, text)
+        if text:
+            print(text)
+            print(text_to_braille(text))
+            self._audio.play_audio(file_path, text)
         self.finished.emit()

@@ -5,18 +5,18 @@ class ZoomStabilizer:
         """
         alpha : facteur de lissage (0.1 = très stable, 0.5 = plus réactif)
         """
-        self.alpha = alpha
-        self.prev_x = None
-        self.prev_y = None
+        self._alpha = alpha
+        self._prev_x = None
+        self._prev_y = None
 
     def smooth(self, x, y):
         """Lissage exponentiel de la position (x, y)."""
-        if self.prev_x is None or self.prev_y is None:
-            self.prev_x, self.prev_y = x, y
+        if self._prev_x is None or self._prev_y is None:
+            self._prev_x, self._prev_y = x, y
         else:
-            self.prev_x = self.alpha * x + (1 - self.alpha) * self.prev_x
-            self.prev_y = self.alpha * y + (1 - self.alpha) * self.prev_y
-        return int(self.prev_x), int(self.prev_y)
+            self._prev_x = self._alpha * x + (1 - self._alpha) * self._prev_x
+            self._prev_y = self._alpha * y + (1 - self._alpha) * self._prev_y
+        return int(self._prev_x), int(self._prev_y)
 
 
 def zoom_on_interest_zone_stable(frame, position, stabilizer, zoom_ratio, zone_ratio):

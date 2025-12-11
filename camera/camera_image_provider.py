@@ -8,7 +8,7 @@ class CameraImageProvider(QQuickImageProvider):
         self._image = QImage()
         self._mutex = QMutex()
 
-    def update_image(self, img: QImage):
+    def update_image(self, img):
         with QMutexLocker(self._mutex):
             self._image = img
 

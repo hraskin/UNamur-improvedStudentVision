@@ -7,24 +7,24 @@ from mediapipe.framework.formats.landmark_pb2 import NormalizedLandmark
 
 class Pipeline:
     def __init__(self):
-        self.recognizer = HandRecognizer()
-        self.stabilizer = ZoomStabilizer(alpha=0.15)
+        self._recognizer = HandRecognizer()
+        self._stabilizer = ZoomStabilizer(alpha=0.15)
 
     def execute(self, frame):
-        self.recognizer.detect_async(frame)
+        self._recognizer.detect_async(frame)
         settings = SettingsSingleton.get_instance()
         if settings.get_zoom_x() != 0:
             position = self._landmark_from_pixels(settings.get_zoom_x(), settings.get_zoom_y(), frame)
             frame = zoom_on_interest_zone_stable(
-                frame,position, self.stabilizer,
+                frame,position, self._stabilizer,
                 zoom_ratio=settings.get_zoom_level(), zone_ratio=0.55
             )
 
-        elif self.recognizer.landmarks_to_draw and settings.get_zoom_on():
-            index_position = self.recognizer.index_position
-            self.recognizer.draw_landmarks(frame)
+        elif self._recognizer._landmarks_to_draw and settings.get_zoom_on():
+            index_position = self._recognizer._index_position
+            self._recognizer.draw_landmarks(frame)
             frame = zoom_on_interest_zone_stable(
-                frame, index_position, self.stabilizer,
+                frame, index_position, self._stabilizer,
                 zoom_ratio=1.4, zone_ratio=0.55
             )
 

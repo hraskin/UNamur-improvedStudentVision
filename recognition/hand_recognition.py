@@ -8,9 +8,9 @@ VisionRunningMode = mp.tasks.vision.RunningMode
 
 class HandRecognizer:
     def __init__(self, max_hands=1):
-        self.landmarks_to_draw = []
-        self.handedness_to_draw = []
-        self.index_position = None
+        self._landmarks_to_draw = []
+        self._handedness_to_draw = []
+        self._index_position = None
 
         # Configuration du modèle
         base_options = python.BaseOptions(model_asset_path=MODEL_PATH)
@@ -18,19 +18,19 @@ class HandRecognizer:
             base_options=base_options,
             num_hands=max_hands,
             running_mode=VisionRunningMode.LIVE_STREAM,
-            result_callback=self.on_result
+            result_callback=self._on_result
         )
-        self.detector = vision.HandLandmarker.create_from_options(options)
+        self._detector = vision.HandLandmarker.create_from_options(options)
 
-    def on_result(self, result, image, timestamp_ms):
+    def _on_result(self, result, image, timestamp_ms):
         """Callback appelé par MediaPipe après traitement de chaque frame"""
         if result and result.hand_landmarks:
-            self.landmarks_to_draw = [result.hand_landmarks[0]]
-            self.handedness_to_draw = [result.handedness[0]]
-            self.index_position = result.hand_landmarks[0][8] # Index of the index finger tip
+            self._landmarks_to_draw = [result.hand_landmarks[0]]
+            self._handedness_to_draw = [result.handedness[0]]
+            self._index_position = result.hand_landmarks[0][8] # Index of the index finger tip
         else:
-            self.landmarks_to_draw = []
-            self.handedness_to_draw = []
+            self._landmarks_to_draw = []
+            self._handedness_to_draw = []
 
     def draw_landmarks(self, frame):
         """Dessine les landmarks directement avec OpenCV"""
@@ -43,7 +43,7 @@ class HandRecognizer:
         ]
         h, w, _ = frame.shape
 
-        for idx, hand_landmarks in enumerate(self.landmarks_to_draw):
+        for idx, hand_landmarks in enumerate(self._landmarks_to_draw):
             points = [(int(lm.x * w), int(lm.y * h)) for lm in hand_landmarks]
 
             # Dessiner les points
@@ -55,8 +55,8 @@ class HandRecognizer:
                 cv2.line(frame, points[start], points[end], (255, 0, 0), 2)
 
             # Afficher la main gauche/droite
-            if idx < len(self.handedness_to_draw):
-                hand_label = self.handedness_to_draw[idx][0].category_name
+            if idx < len(self._handedness_to_draw):
+                hand_label = self._handedness_to_draw[idx][0].category_name
                 cv2.putText(frame, hand_label, (points[0][0], points[0][1] - 10),
                             cv2.FONT_HERSHEY_SIMPLEX, 0.7, (88, 205, 54), 2)
 
@@ -64,4 +64,4 @@ class HandRecognizer:
         """Envoyer la frame au modèle"""
         mp_image = mp.Image(image_format=mp.ImageFormat.SRGB, data=frame)
         timestamp_ms = int(cv2.getTickCount() / cv2.getTickFrequency() * 1000)
-        self.detector.detect_async(mp_image, timestamp_ms=timestamp_ms)
+        self._detector.detect_async(mp_image, timestamp_ms=timestamp_ms)

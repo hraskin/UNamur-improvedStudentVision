@@ -11,23 +11,23 @@ class CameraWorker(QObject):
 
     def __init__(self, camera: str|int):
         super().__init__()
-        self.running = False
+        self._running = False
         if isinstance(camera, int):
-            self.cap = cv2.VideoCapture(camera)
+            self._cap = cv2.VideoCapture(camera)
         else:
             url = f"http://{camera}:4747/video"
-            self.cap = cv2.VideoCapture(url)
-        if not self.cap.isOpened():
+            self._cap = cv2.VideoCapture(url)
+        if not self._cap.isOpened():
             raise RuntimeError("Impossible d’ouvrir la caméra.")
 
     @Slot()
     def start(self):
-        self.running = True
+        self._running = True
         fps_tracker = FpsTracker()
         pipeline = Pipeline()
 
-        while self.running:
-            ret, frame = self.cap.read()
+        while self._running:
+            ret, frame = self._cap.read()
             if not ret:
                 break
 
@@ -51,8 +51,8 @@ class CameraWorker(QObject):
             self.raw_frame_ready.emit(qimg_raw.copy())
             self.frame_ready.emit(qimg.copy())
 
-        self.cap.release()
+        self._cap.release()
 
     @Slot()
     def stop(self):
-        self.running = False
+        self._running = False
