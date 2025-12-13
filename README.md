@@ -1,4 +1,6 @@
-# UNamur-improvedStudentVision
+# ImprovedBoardVision
+
+An accessible project for students with visual impairments. ImprovedBoardVision captures the blackboard or whiteboard and retransmits it to the student after processing it through a pipeline of visual enhancement steps, such as edge detection and luminosity and contrast enhancement.
 
 ## Setup Instructions to enable video flow from android device
 
