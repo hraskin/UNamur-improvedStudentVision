@@ -9,7 +9,7 @@ ApplicationWindow {
     visibility: ApplicationWindow.Maximized
     minimumWidth: 800
     minimumHeight: 700
-    title: "ImprovedStudentVision"
+    title: "ImprovedBoardVision"
     color: "#F4F4F4"
 
     FontLoader {

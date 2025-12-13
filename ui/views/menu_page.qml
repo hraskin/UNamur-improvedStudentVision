@@ -24,7 +24,7 @@ Rectangle {
         spacing: 25
 
         Text {
-            text: "Configuration d'ImprovedStudentVision"
+            text: "Configuration d'ImprovedBoardVision"
             font.family: root.fontName
             font.pixelSize: 34
             font.bold: true
